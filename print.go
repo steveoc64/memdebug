@@ -20,7 +20,7 @@ const (
 	mmRed     = "[1;31m"
 )
 
-func Print(t time.Time) {
+func Print(t time.Time, what string) {
 	// OTT memory hacks
 	ms1 := &runtime.MemStats{}
 	ms2 := &runtime.MemStats{}
@@ -41,14 +41,15 @@ func Print(t time.Time) {
 
 	// build up a string and print it once, otherwise the output from different
 	// threads can easily get gemogrified together
-	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s",
+	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %s",
 		//mmBlue, mtype.method.Name, mmOff,
 		mmOrange, time.Since(t), mmOff,
 		cmm, mmV, mmOff,
 		ms2.Alloc,
 		cmmm, ms2.Sys, mmOff,
 		ms2.StackInuse,
-		mmMagenta)
+		mmMagenta,
+		what)
 
 	fmt.Println(s)
 
