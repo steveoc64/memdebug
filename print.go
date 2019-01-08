@@ -41,7 +41,7 @@ func Print(t time.Time, what string) {
 
 	// build up a string and print it once, otherwise the output from different
 	// threads can easily get gemogrified together
-	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %s",
+	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %s%s",
 		//mmBlue, mtype.method.Name, mmOff,
 		mmOrange, time.Since(t), mmOff,
 		cmm, mmV, mmOff,
@@ -49,7 +49,8 @@ func Print(t time.Time, what string) {
 		cmmm, ms2.Sys, mmOff,
 		ms2.StackInuse,
 		mmMagenta,
-		what)
+		what,
+		mmOff)
 
 	fmt.Println(s)
 
