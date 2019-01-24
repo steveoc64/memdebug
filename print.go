@@ -27,12 +27,15 @@ const (
 	mmRed     = "[1;31m"
 )
 
-func init() {
+var isProfiling bool
+
+func DoProfile() {
 	f, err := os.Create("cpu.pprof")
 	if err != nil {
 		log.Fatal("cpu.pprof", err)
 	}
 	pprof.StartCPUProfile(f)
+	isProfiling = true
 }
 
 func Print(t time.Time, what ...interface{}) {
@@ -42,9 +45,11 @@ func Print(t time.Time, what ...interface{}) {
 	// OTT memory hacks
 	ms1 := &runtime.MemStats{}
 	ms2 := &runtime.MemStats{}
-	runtime.ReadMemStats(ms1)
-	runtime.GC()
-	debug.FreeOSMemory()
+	if !isProfiling {
+		runtime.ReadMemStats(ms1)
+		runtime.GC()
+		debug.FreeOSMemory()
+	}
 	runtime.ReadMemStats(ms2)
 	mmV := ms2.Alloc - lastMemm
 	cmm := mmYellow
