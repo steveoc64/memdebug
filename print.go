@@ -2,8 +2,10 @@ package memdebug
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
+	"os/exec"
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
@@ -77,4 +79,18 @@ func Print(t time.Time, what ...interface{}) {
 
 func WriteProfile() {
 	pprof.StopCPUProfile()
+	cmd := exec.Command("go", "tool", "pprof", "-pdf", "./cpu.pprof")
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+	f, err := os.Create("cpu.pdf")
+	if err == nil {
+		io.Copy(f, stdout)
+		f.Close()
+	}
+	cmd.Wait()
 }
