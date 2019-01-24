@@ -74,3 +74,7 @@ func Print(t time.Time, what ...interface{}) {
 	lastMemmm = ms2.Sys
 
 }
+
+func End() {
+	pprof.StopCPUProfile()
+}
