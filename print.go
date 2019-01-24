@@ -75,6 +75,6 @@ func Print(t time.Time, what ...interface{}) {
 
 }
 
-func End() {
+func WriteProfile() {
 	pprof.StopCPUProfile()
 }
