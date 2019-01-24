@@ -2,13 +2,18 @@ package memdebug
 
 import (
 	"fmt"
+	"log"
+	"os"
 	"runtime"
 	"runtime/debug"
+	"runtime/pprof"
+	"sync"
 	"time"
 )
 
 var lastMemm uint64
 var lastMemmm uint64
+var printMutex sync.Mutex
 
 const (
 	mmOff     = "[0m"
@@ -20,7 +25,18 @@ const (
 	mmRed     = "[1;31m"
 )
 
-func Print(t time.Time, what string) {
+func init() {
+	f, err := os.Create("cpu.pprof")
+	if err != nil {
+		log.Fatal("cpu.pprof", err)
+	}
+	pprof.StartCPUProfile(f)
+}
+
+func Print(t time.Time, what ...interface{}) {
+	printMutex.Lock()
+	defer printMutex.Unlock()
+
 	// OTT memory hacks
 	ms1 := &runtime.MemStats{}
 	ms2 := &runtime.MemStats{}
@@ -41,7 +57,7 @@ func Print(t time.Time, what string) {
 
 	// build up a string and print it once, otherwise the output from different
 	// threads can easily get gemogrified together
-	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %s%s",
+	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %+v%s",
 		//mmBlue, mtype.method.Name, mmOff,
 		mmOrange, time.Since(t), mmOff,
 		cmm, mmV, mmOff,
