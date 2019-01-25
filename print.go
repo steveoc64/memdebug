@@ -29,7 +29,7 @@ const (
 
 var isProfiling bool
 
-func DoProfile() {
+func Profile() {
 	f, err := os.Create("cpu.pprof")
 	if err != nil {
 		log.Fatal("cpu.pprof", err)
