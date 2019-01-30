@@ -49,9 +49,9 @@ If you are more interested in CPU profiling, add this to your main.go:
 	defer memdebug.WriteProfile()
 ```
 
-This will turn off the GC on each print, and the subsequent calls to free OS memory, so you want see an accurate picture of memory allocations and frees (just actual allocations pre-GC)
+This will turn off the GC on each print, and the subsequent calls to free OS memory, which changes the output above to show an accurate picture of memory consumption without taking GC into account. ie - how your app actually performs in the wild.
 
-But it will give an accurate picture of CPU usage.
+In addition, it will give an accurate picture of CPU usage.
 
 When the app exits, you will see some extra files in the root dir - namely
 
