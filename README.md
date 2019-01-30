@@ -1,5 +1,7 @@
 # memdebug
 
+![memdebug](memdebug.jpg)
+
 go mem debugger
 
 ## Install
