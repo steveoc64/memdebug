@@ -29,7 +29,7 @@ const (
 
 var isProfiling bool
 
-func DoProfile() {
+func Profile() {
 	f, err := os.Create("cpu.pprof")
 	if err != nil {
 		log.Fatal("cpu.pprof", err)
@@ -64,9 +64,10 @@ func Print(t time.Time, what ...interface{}) {
 
 	// build up a string and print it once, otherwise the output from different
 	// threads can easily get gemogrified together
-	s := fmt.Sprintf("%s%12s%s (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %+v%s",
+	s := fmt.Sprintf("%s%12s%s [%s%4d%s] (%s%8v%s):%10v:%s%10v%s:%10v <- %s  %+v%s",
 		//mmBlue, mtype.method.Name, mmOff,
 		mmOrange, time.Since(t), mmOff,
+		mmBlue, runtime.NumGoroutine(), mmOff,
 		cmm, mmV, mmOff,
 		ms2.Alloc,
 		cmmm, ms2.Sys, mmOff,
