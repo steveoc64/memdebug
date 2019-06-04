@@ -83,6 +83,32 @@ func Print(t time.Time, what ...interface{}) {
 
 }
 
+var pversion = 0
+
+func DumpProfile() {
+	pprof.StopCPUProfile()
+	filename := "./cpu.pprof"
+	if pversion > 0 {
+		filename = fmt.Sprintf("./cpu-%03d.pprof", pversion)
+	}
+	cmd := exec.Command("go", "tool", "pprof", "-pdf", filename)
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err := cmd.Start(); err != nil {
+		log.Fatal(err)
+	}
+	f, err := os.Create(fmt.Sprintf("cpu-%03d.pdf", pversion))
+	if err == nil {
+		io.Copy(f, stdout)
+		f.Close()
+	}
+	cmd.Wait()
+	pversion++
+	pprof.StartCPUProfile(f)
+}
+
 func WriteProfile() {
 	pprof.StopCPUProfile()
 	cmd := exec.Command("go", "tool", "pprof", "-pdf", "./cpu.pprof")

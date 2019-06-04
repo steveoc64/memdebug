@@ -63,4 +63,27 @@ Which is a pproff`d PDF file showing a CPU trace where all the time is spent.
 
 Nice !
 
+## CPU Sampling
+
+How to do multi-sampling 
+
+At the start of main(), do this :
+
+```
+  memdebug.Profile()
+```
+
+Then in your code, when you want to capture a set of data, call
+``` 
+  memdebug.DumpProfile()
+```
+
+This will snapshot the data since the last call, and write to to a file.
+
+You will end up with a number of PDF reports labelled
+
+cpu-001.pdf
+cpu-002.pdf
+.. etc
+
 
