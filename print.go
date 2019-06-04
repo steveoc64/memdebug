@@ -83,15 +83,11 @@ func Print(t time.Time, what ...interface{}) {
 
 }
 
-var pversion = 0
+var pversion = 1
 
 func DumpProfile() {
 	pprof.StopCPUProfile()
-	filename := "./cpu.pprof"
-	if pversion > 0 {
-		filename = fmt.Sprintf("./cpu-%03d.pprof", pversion)
-	}
-	cmd := exec.Command("go", "tool", "pprof", "-pdf", filename)
+	cmd := exec.Command("go", "tool", "pprof", "-pdf", "./cpu.pprof")
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
 		log.Fatal(err)
