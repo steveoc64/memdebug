@@ -28,6 +28,7 @@ const (
 )
 
 var isProfiling bool
+var gcMode = true
 
 func Profile() {
 	f, err := os.Create("cpu.pprof")
@@ -36,6 +37,11 @@ func Profile() {
 	}
 	pprof.StartCPUProfile(f)
 	isProfiling = true
+	gcMode = false
+}
+
+func GCMode(flag bool) {
+	gcMode = flag
 }
 
 func Print(t time.Time, what ...interface{}) {
@@ -45,7 +51,7 @@ func Print(t time.Time, what ...interface{}) {
 	// OTT memory hacks
 	ms1 := &runtime.MemStats{}
 	ms2 := &runtime.MemStats{}
-	if !isProfiling {
+	if gcMode {
 		runtime.ReadMemStats(ms1)
 		runtime.GC()
 		debug.FreeOSMemory()
