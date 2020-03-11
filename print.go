@@ -28,7 +28,7 @@ const (
 )
 
 var isProfiling bool
-var gcMode = true
+var gcMode = false
 
 func Profile() {
 	f, err := os.Create("cpu.pprof")
